@@ -1,0 +1,333 @@
+{
+    "swagger": "2.0",
+    "info": {
+      "version": "1.0.0",
+      "title": "Up and Up API",
+      "description": "Find out how your APIs work",
+      "license": {
+        "name": "MIT",
+        "url": "https://opensource.org/licenses/MIT"
+      }
+    },
+    "host": "localhost:3001",
+    "basePath": "/api",
+    "tags": [
+      {
+        "name": "Auth",
+        "description": "API for wallet authentication"
+      },
+      {
+        "name": "Credentials",
+        "description": "API for working with credentials"
+      }
+    ],
+    "schemes": [
+      "http",
+      "https"
+    ],
+    "consumes": [
+      "application/json"
+    ],
+    "produces": [
+      "application/json"
+    ],
+    "securityDefinitions": {
+        "ApiKeyAuth":{
+          "type": "apiKey",
+          "in": "headers",
+          "name": "authorization"
+        }
+    },
+    "paths": {
+      "/auth/send-otp": {
+        "post": {
+          "summary": "Send otp to specified email",
+          "tags": [
+            "Auth"
+          ],
+          "description": "Login user in system",
+          "parameters": [
+            {
+              "name": "Email",
+              "in": "body",
+              "description": "send otp",
+              "schema": {
+                "$ref": "#/definitions/SendOTP"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "OTP Sent",
+              "schema": {
+                "$ref": "#/definitions/SendOTPResponse"
+              }
+            },
+            "401":{
+              "description": "Login details are not valid!!"
+            },
+            "404":{
+              "description": "Acount does not exist!"
+            },
+            "500":{
+              "description": "Cannot send otp!!"
+            }
+          }
+        }
+      },
+
+
+      "/auth/get-auth-token": {
+        "post": {
+          "summary": "Get authentication token",
+          "tags": [
+            "Auth"
+          ],
+          "description": "Send authentication token from using challenge and otp",
+          "parameters": [
+            {
+              "name": "OTP",
+              "in": "body",
+              "schema": {
+                "$ref": "#/definitions/GetAuthTokenParams"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Get authentication token",
+              "schema": {
+                "$ref": "#/definitions/GetAuthTokenResp"
+              }
+            },
+            "500":{
+              "description": "Cannot send otp!!"
+            }
+          }
+        }
+      },
+
+      "/auth/create-wallet": {
+        "post": {
+            "summary": "Create Wallet using email",
+          "tags": [
+            "Auth"
+          ],
+          "description": "use email and name to create your wallet",
+          "parameters": [
+            {
+              "in": "body",
+              "schema": {
+                "$ref": "#/definitions/CreateWalletParam"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Account created",
+              "schema": {
+                "$ref": "#/definitions/CreateWalletResp"
+              }
+            },
+            "500":{
+              "description": "Cannot create account, Already exists!!"
+            }
+          }
+        }
+      },
+
+
+      "/auth/check-login": {
+        "get": {
+            "summary": "Check login status",
+          "tags": [
+            "Auth"
+          ],
+          "description": "Check if the user is logged in by verifying the authorization token.",
+          "parameters": [
+            {
+              "in": "header",
+              "name": "authorization",
+              "type": "string",
+              "required": true,
+              "description": "Auth token obtained from get-auth-token api"
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Account created",
+              "schema": {
+                "$ref": "#/definitions/CheckLoginResp"
+              }
+            },
+            "500":{
+              "description": "Cannot create account, Already exists!!"
+            }
+          }
+        }
+      },
+
+
+      "/auth/issue-credential": {
+        "post": {
+            "summary": "Issue Credential",
+          "tags": [
+            "Credentials"
+          ],
+          "description": "Issue a school credential from backend issuer ",
+          "parameters": [
+            {
+              "in": "body",
+              "schema": {
+                "$ref": "#/definitions/IssueCredentialParam"
+              }
+            }
+          ],
+          "produces": [
+            "application/json"
+          ],
+          "responses": {
+            "200": {
+              "description": "Cred issued"
+            },
+            "500":{
+              "description": "Cannot create account, Already exists!!"
+            }
+          }
+        }
+      }
+
+
+
+    },
+
+    "definitions": {
+
+      "SendOTP": {
+        "properties": {
+          "email": {
+            "type": "string",
+            "default": "jhon.doe@gmail.com"
+          }
+        }
+      },
+      "SendOTPResponse":{
+        "properties": {
+          "status": {
+            "type": "string",
+            "default": "success"
+          },
+          "code": {
+            "type": "number",
+            "default": 0
+          },
+          "challenge": {
+            "type": "string",
+            "description": "challenge will be combined with otp to get authToken"
+          }
+        }
+      },
+
+      "GetAuthTokenParams": {
+        "properties": {
+          "challenge": {
+            "type": "string",
+            "default": "ylHmacvynAfWRewclp+R9po2PiCktKDNeP2Rh9oW/Wg="
+          },
+          "otp": {
+            "type": "string",
+            "default": "619247"
+          }
+        }
+      },
+      "GetAuthTokenResp": {
+        "properties": {
+          "status": {
+            "type": "string",
+            "default": "success"
+          },
+          "code": {
+            "type": "number",
+            "default": 0
+          },
+          "authToken": {
+            "type": "string",
+            "description": "use this auth token to access your account/wallet"
+          }
+        }
+      },
+
+
+      "CreateWalletParam": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "default": "Jhon Doe"
+          },
+          "email": {
+            "type": "string",
+            "default": "jhon.doe@gmail.com"
+          }
+        }
+      },
+
+      "CheckLoginResp": {
+        "properties": {
+          "code": {
+            "type": "number",
+            "default": 0
+          },
+          "msg": {
+            "type": "string",
+            "default": "Valid Wallet"
+          },
+          "walletId":{
+            "type": "string",
+            "default": "urn:trinsic:wallets:z5udg29x8vQ4scXJCLA4VF8"
+          }
+        }
+      },
+
+      "IssueCredentialParam": {
+        "properties": {
+          "firstName": {
+            "type": "string",
+            "default": "Jhon"
+          },
+          "lastName": {
+            "type": "string",
+            "default": "Doe"
+          },
+          "age": {
+            "type": "number",
+            "default": 19
+          },
+          "houseNo": {
+            "type": "string",
+            "default": "123"
+          },
+          "city": {
+            "type": "string",
+            "default": "Pune"
+          },
+          "country": {
+            "type": "string",
+            "default": "India"
+          }
+        }
+      }
+
+    }
+  }
