@@ -18,6 +18,6 @@ app.use('/docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument))
 app.use("/api/auth", authRouter);
 
 
-app.listen(3001, ()=> {
+app.listen(3001, '0.0.0.0',()=> {
     console.log("application running")
 })
