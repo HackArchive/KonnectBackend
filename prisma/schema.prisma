@@ -29,5 +29,6 @@ model Post {
   userId Int?
 
   imageURL String
+  prompt String
 
 }

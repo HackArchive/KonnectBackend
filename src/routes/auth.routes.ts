@@ -1,5 +1,5 @@
 import { Router } from "express"
-import {createUser, generateImage,getUser,uploadProfilePic } from "../controllers/auth.controller";
+import {allPosts, createPost, createUser, generateImage,getUser,uploadProfilePic } from "../controllers/auth.controller";
 import multer from "multer";
 import path from "path";
 
@@ -20,6 +20,8 @@ router.post("/upload-profile-pic",upload.single("image"), uploadProfilePic)
 router.post("/create-user", createUser)
 router.get("/get-user", getUser)
 
+router.post("/create-post", createPost)
+router.get("/posts/all", allPosts)
 
 
 export default router;

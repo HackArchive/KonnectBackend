@@ -13,8 +13,7 @@ export const SAS_TOKEN=process.env.SAS_TOKEN;
 
 export const openai = new OpenAI({
     apiKey: DALLE_API,
-  });
-  
+});
   
 const blobServiceClient = new BlobServiceClient(`https://${ACCOUNT_NAME}.blob.core.windows.net/?${SAS_TOKEN}`);
 export const containerClient = blobServiceClient.getContainerClient(BUCKET_NAME!);
