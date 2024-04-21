@@ -17,7 +17,7 @@ model User {
   id       Int    @id @default(autoincrement())
   walletId String @unique
   name     String
-  email    String
+  profile_pic String
 
   posts   Post[] @relation("UserPost")
 }
@@ -29,4 +29,5 @@ model Post {
   userId Int?
 
   imageURL String
+
 }

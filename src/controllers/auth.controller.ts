@@ -4,6 +4,66 @@ import { prisma } from '../Prisma';
 import { containerClient, openai } from '../common';
 
 
+
+
+export const createUser = async (req: Request,res: Response) => {
+
+    try {   
+
+        await prisma.user.create({
+            data: {
+                walletId: req.body.walletId,
+                name: req.body.name,
+                profile_pic: req.body.profile_pic
+            }
+        })
+        
+
+        res.send({
+            status: "success",
+            data: "User created", 
+        }).status(201);
+            
+
+    } catch(e: any) {
+        console.log(e);
+        res.status(500).send({
+            status: "danger",
+            code: "something went wrong"
+        });
+    }
+}
+
+
+
+export const getUser = async (req: Request,res: Response) => {
+
+    try {   
+
+        let user = await prisma.user.findFirst({
+            where: {
+                walletId: req.params.wallet_id
+            }
+        })        
+
+        res.send({
+            status: "success",
+            user: user, 
+        }).status(201);
+            
+
+    } catch(e: any) {
+        console.log(e);
+        res.status(500).send({
+            status: "danger",
+            code: "something went wrong"
+        });
+    }
+
+}
+
+
+
 export const generateImage = async (req: Request,res: Response) => {
 
     try {   
