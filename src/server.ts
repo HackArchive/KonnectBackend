@@ -6,7 +6,6 @@ import swaggerJsdoc from 'swagger-jsdoc'
 import swaggerUi from 'swagger-ui-express'
 import swaggerDocument = require("../swagger.json");
 
-
 dotenv.config();
 
 const app = express();

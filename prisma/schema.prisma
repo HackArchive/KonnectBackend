@@ -19,19 +19,14 @@ model User {
   name     String
   email    String
 
-  offersTo   CredentialOffer[] @relation("OffersTo")
-  offersFrom CredentialOffer[] @relation("OffersFrom")
+  posts   Post[] @relation("UserPost")
 }
 
-model CredentialOffer {
+model Post {
   id Int @id @default(autoincrement())
 
-  from   User? @relation("OffersFrom", fields: [fromId], references: [id])
-  fromId Int?
+  user   User? @relation("UserPost", fields: [userId], references: [id])
+  userId Int?
 
-  to   User? @relation("OffersTo", fields: [toId], references: [id])
-  toId Int?
-
-  documentJson Json
-  shareUrl     String
+  imageURL String
 }
