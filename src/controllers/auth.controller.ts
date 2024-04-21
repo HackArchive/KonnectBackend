@@ -73,9 +73,9 @@ const generateImagefn = async (prompt: string) => {
             n:1,
     })
     
-    const blobclient = containerClient.getBlockBlobClient("konnect")
-    await blobclient.syncUploadFromURL(data.data[0].url!)
-    return blobclient.url
+    // const blobclient = containerClient.getBlockBlobClient("konnect")
+    // await blobclient.syncUploadFromURL(data.data[0].url!)
+    return data.data[0].url!
 }
 
 
@@ -157,12 +157,12 @@ export const generateImage = async (req: Request,res: Response) => {
             n:1,
         })
         
-        const blobclient = containerClient.getBlockBlobClient("konnect")
-        await blobclient.syncUploadFromURL(data.data[0].url!)
+        // const blobclient = containerClient.getBlockBlobClient("konnect")
+        // await blobclient.syncUploadFromURL(data.data[0].url!)
        
         res.send({
             status: "success",
-            data: blobclient.url, 
+            data: data.data[0].url!, 
         });
             
 
