@@ -1,7 +1,7 @@
 import { IdentityProvider, TrinsicService } from '@trinsic/trinsic';
 import { Request, Response } from 'express';
 import { prisma } from '../Prisma';
-import { openai, storage } from '../common';
+import { containerClient, openai } from '../common';
 
 
 export const generateImage = async (req: Request,res: Response) => {
@@ -16,11 +16,13 @@ export const generateImage = async (req: Request,res: Response) => {
             quality:"hd",
             n:1,
         })
-
+        
+        const blobclient = containerClient.getBlockBlobClient("konnect")
+        await blobclient.syncUploadFromURL(data.data[0].url!)
        
         res.send({
             status: "success",
-            data: data.data[0], 
+            data: blobclient.url, 
         });
             
 
@@ -40,18 +42,13 @@ export const uploadProfilePic = async (req: Request,res: Response) => {
 
     try {
 
-        console.log(req.file?.destination)
-        const gcs = storage.bucket("bucket_name"); // Removed "gs://" from the bucket name
-        const storagepath = `profile-pics/${req.file?.filename}`;
-        const result = await gcs.upload(`${req.file?.destination}/${req.file?.filename}`, {
-            destination: storagepath,
-            predefinedAcl: 'publicRead', // Set the file to be publicly readable
-            metadata: {
-                contentType: "application/plain", // Adjust the content type as needed
-            }
-        });
-        return result[0].metadata.mediaLink;
-        
+        const blobclient = containerClient.getBlockBlobClient("konnect")
+        await blobclient.uploadFile(`${req.file?.destination}/${req.file?.filename}`)
+
+        res.send({
+            status: "success",
+            data: blobclient.url, 
+        });        
     } catch (error: any) {
         console.log(error);
         throw new Error(error.message);
