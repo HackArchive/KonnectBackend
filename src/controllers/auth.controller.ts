@@ -40,16 +40,16 @@ export const getUser = async (req: Request,res: Response) => {
 
     try {   
 
-        let user = await prisma.user.findFirst({
+        let user = await prisma.user.findFirstOrThrow({
             where: {
-                walletId: req.params.wallet_id
+                walletId: req.query.wallet_id?.toString()
             }
         })        
 
         res.send({
             status: "success",
             user: user, 
-        }).status(201);
+        }).status(200);
             
 
     } catch(e: any) {
